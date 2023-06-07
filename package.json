@@ -1,0 +1,29 @@
+{
+  "name": "new-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bootstrap": "^5.2.3",
+    "dotenv": "^16.0.3",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.3.1",
+    "net": "^1.0.2",
+    "next": "13.4.2",
+    "next-auth": "^4.22.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
