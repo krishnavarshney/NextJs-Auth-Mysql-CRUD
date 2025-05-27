@@ -1,0 +1,23 @@
+added 2 packages, removed 1 package, changed 7 packages, and audited 454 packages in 18s
+
+141 packages are looking for funding
+  run `npm fund` for details
+
+# npm audit report
+
+next  <=14.2.23
+Severity: high
+Next.js Server-Side Request Forgery in Server Actions - https://github.com/advisories/GHSA-fr5h-rqp8-mj6g
+Denial of Service condition in Next.js image optimization - https://github.com/advisories/GHSA-g77x-44xx-532m
+Next.js authorization bypass vulnerability - https://github.com/advisories/GHSA-7gfc-8cq8-jh5f
+Next.js Race Condition to Cache Poisoning - https://github.com/advisories/GHSA-qpjv-v59x-3qc4
+fix available via `npm audit fix --force`
+Will install next@15.3.2, which is a breaking change
+node_modules/next
+
+1 high severity vulnerability
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+ npm WARN using --force Recommended protections disabled.
+npm WARN audit Updating next to 13.5.11, which is outside your stated dependency range.

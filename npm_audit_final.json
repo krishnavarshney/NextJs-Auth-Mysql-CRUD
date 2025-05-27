@@ -1,0 +1,104 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "next": {
+      "name": "next",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1097295,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Server-Side Request Forgery in Server Actions",
+          "url": "https://github.com/advisories/GHSA-fr5h-rqp8-mj6g",
+          "severity": "high",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=13.4.0 <14.1.1"
+        },
+        {
+          "source": 1100421,
+          "name": "next",
+          "dependency": "next",
+          "title": "Denial of Service condition in Next.js image optimization",
+          "url": "https://github.com/advisories/GHSA-g77x-44xx-532m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=10.0.0 <14.2.7"
+        },
+        {
+          "source": 1101380,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js authorization bypass vulnerability",
+          "url": "https://github.com/advisories/GHSA-7gfc-8cq8-jh5f",
+          "severity": "high",
+          "cwe": [
+            "CWE-285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=9.5.5 <14.2.15"
+        },
+        {
+          "source": 1104490,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Race Condition to Cache Poisoning",
+          "url": "https://github.com/advisories/GHSA-qpjv-v59x-3qc4",
+          "severity": "low",
+          "cwe": [
+            "CWE-362"
+          ],
+          "cvss": {
+            "score": 3.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+          },
+          "range": "<14.2.24"
+        }
+      ],
+      "effects": [],
+      "range": "<=14.2.23",
+      "nodes": [
+        "node_modules/next"
+      ],
+      "fixAvailable": {
+        "name": "next",
+        "version": "15.3.2",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 1,
+      "critical": 0,
+      "total": 1
+    },
+    "dependencies": {
+      "prod": 450,
+      "dev": 0,
+      "optional": 9,
+      "peer": 2,
+      "peerOptional": 0,
+      "total": 460
+    }
+  }
+}

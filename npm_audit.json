@@ -1,0 +1,902 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@babel/runtime": {
+      "name": "@babel/runtime",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1104000,
+          "name": "@babel/runtime",
+          "dependency": "@babel/runtime",
+          "title": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+          "url": "https://github.com/advisories/GHSA-968p-4wvh-cqc8",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 6.2,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<7.26.10"
+        }
+      ],
+      "effects": [],
+      "range": "<7.26.10",
+      "nodes": [
+        "node_modules/@babel/runtime"
+      ],
+      "fixAvailable": true
+    },
+    "body-parser": {
+      "name": "body-parser",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1099520,
+          "name": "body-parser",
+          "dependency": "body-parser",
+          "title": "body-parser vulnerable to denial of service when url encoding is enabled",
+          "url": "https://github.com/advisories/GHSA-qwcr-r2fm-qrc7",
+          "severity": "high",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<1.20.3"
+        }
+      ],
+      "effects": [
+        "express"
+      ],
+      "range": "<1.20.3",
+      "nodes": [
+        "node_modules/body-parser"
+      ],
+      "fixAvailable": true
+    },
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1098094,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "Uncontrolled resource consumption in braces",
+          "url": "https://github.com/advisories/GHSA-grv7-fg5c-xmjg",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-1050"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.0.3"
+        }
+      ],
+      "effects": [],
+      "range": "<3.0.3",
+      "nodes": [
+        "node_modules/braces"
+      ],
+      "fixAvailable": true
+    },
+    "cookie": {
+      "name": "cookie",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1103907,
+          "name": "cookie",
+          "dependency": "cookie",
+          "title": "cookie accepts cookie name, path, and domain with out of bounds characters",
+          "url": "https://github.com/advisories/GHSA-pxg6-pf52-xh8x",
+          "severity": "low",
+          "cwe": [
+            "CWE-74"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<0.7.0"
+        }
+      ],
+      "effects": [
+        "express",
+        "express-session",
+        "next-auth"
+      ],
+      "range": "<0.7.0",
+      "nodes": [
+        "node_modules/cookie",
+        "node_modules/express/node_modules/cookie",
+        "node_modules/next-auth/node_modules/cookie"
+      ],
+      "fixAvailable": true
+    },
+    "cross-spawn": {
+      "name": "cross-spawn",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1104664,
+          "name": "cross-spawn",
+          "dependency": "cross-spawn",
+          "title": "Regular Expression Denial of Service (ReDoS) in cross-spawn",
+          "url": "https://github.com/advisories/GHSA-3xgq-45jj-v275",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.0.5"
+        }
+      ],
+      "effects": [],
+      "range": "7.0.0 - 7.0.4",
+      "nodes": [
+        "node_modules/cross-spawn"
+      ],
+      "fixAvailable": true
+    },
+    "express": {
+      "name": "express",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1096820,
+          "name": "express",
+          "dependency": "express",
+          "title": "Express.js Open Redirect in malformed URLs",
+          "url": "https://github.com/advisories/GHSA-rv95-896h-c2vc",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-601",
+            "CWE-1286"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<4.19.2"
+        },
+        {
+          "source": 1100530,
+          "name": "express",
+          "dependency": "express",
+          "title": "express vulnerable to XSS via response.redirect()",
+          "url": "https://github.com/advisories/GHSA-qw6h-vgh9-j6wx",
+          "severity": "low",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:L"
+          },
+          "range": "<4.20.0"
+        },
+        "body-parser",
+        "cookie",
+        "path-to-regexp",
+        "send",
+        "serve-static"
+      ],
+      "effects": [],
+      "range": "<=4.21.1 || 5.0.0-alpha.1 - 5.0.0",
+      "nodes": [
+        "node_modules/express"
+      ],
+      "fixAvailable": true
+    },
+    "express-session": {
+      "name": "express-session",
+      "severity": "low",
+      "isDirect": true,
+      "via": [
+        "cookie"
+      ],
+      "effects": [],
+      "range": "1.0.1 - 1.18.0",
+      "nodes": [
+        "node_modules/express-session"
+      ],
+      "fixAvailable": true
+    },
+    "jose": {
+      "name": "jose",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096835,
+          "name": "jose",
+          "dependency": "jose",
+          "title": "jose vulnerable to resource exhaustion via specifically crafted JWE with compressed plaintext",
+          "url": "https://github.com/advisories/GHSA-hhhv-q57g-882q",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=3.0.0 <=4.15.4"
+        }
+      ],
+      "effects": [],
+      "range": "3.0.0 - 4.15.4",
+      "nodes": [
+        "node_modules/jose"
+      ],
+      "fixAvailable": true
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1098681,
+          "name": "micromatch",
+          "dependency": "micromatch",
+          "title": "Regular Expression Denial of Service (ReDoS) in micromatch",
+          "url": "https://github.com/advisories/GHSA-952p-6rrq-rcjv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<4.0.8"
+        }
+      ],
+      "effects": [],
+      "range": "<4.0.8",
+      "nodes": [
+        "node_modules/micromatch"
+      ],
+      "fixAvailable": true
+    },
+    "mysql2": {
+      "name": "mysql2",
+      "severity": "critical",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1096970,
+          "name": "mysql2",
+          "dependency": "mysql2",
+          "title": "mysql2 Remote Code Execution (RCE) via the readCodeFor function",
+          "url": "https://github.com/advisories/GHSA-fpw7-j2hg-69v5",
+          "severity": "critical",
+          "cwe": [
+            "CWE-94"
+          ],
+          "cvss": {
+            "score": 9.8,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<3.9.4"
+        },
+        {
+          "source": 1097180,
+          "name": "mysql2",
+          "dependency": "mysql2",
+          "title": "MySQL2 for Node Arbitrary Code Injection",
+          "url": "https://github.com/advisories/GHSA-4rch-2fh8-94vw",
+          "severity": "critical",
+          "cwe": [
+            "CWE-94"
+          ],
+          "cvss": {
+            "score": 9.8,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<3.9.7"
+        },
+        {
+          "source": 1097488,
+          "name": "mysql2",
+          "dependency": "mysql2",
+          "title": "mysql2 vulnerable to Prototype Pollution",
+          "url": "https://github.com/advisories/GHSA-pmh2-wpjm-fj45",
+          "severity": "high",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 8.2,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:L"
+          },
+          "range": "<3.9.8"
+        },
+        {
+          "source": 1098367,
+          "name": "mysql2",
+          "dependency": "mysql2",
+          "title": "mysql2 cache poisoning vulnerability",
+          "url": "https://github.com/advisories/GHSA-mqr2-w7wj-jjgr",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-20"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:L"
+          },
+          "range": "<3.9.3"
+        },
+        {
+          "source": 1098617,
+          "name": "mysql2",
+          "dependency": "mysql2",
+          "title": "mysql2 vulnerable to Prototype Poisoning",
+          "url": "https://github.com/advisories/GHSA-49j4-86m8-q2jw",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+          },
+          "range": "<3.9.4"
+        }
+      ],
+      "effects": [],
+      "range": "<=3.9.7",
+      "nodes": [
+        "node_modules/mysql2"
+      ],
+      "fixAvailable": true
+    },
+    "nanoid": {
+      "name": "nanoid",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1101163,
+          "name": "nanoid",
+          "dependency": "nanoid",
+          "title": "Predictable results in nanoid generation when given non-integer values",
+          "url": "https://github.com/advisories/GHSA-mwcw-c2x4-8c55",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-835"
+          ],
+          "cvss": {
+            "score": 4.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<3.3.8"
+        }
+      ],
+      "effects": [],
+      "range": "<3.3.8",
+      "nodes": [
+        "node_modules/nanoid"
+      ],
+      "fixAvailable": true
+    },
+    "next": {
+      "name": "next",
+      "severity": "critical",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1094729,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js missing cache-control header may lead to CDN caching empty reply",
+          "url": "https://github.com/advisories/GHSA-c59h-r6p8-q9wc",
+          "severity": "low",
+          "cwe": [],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=0.9.9 <13.4.20-canary.13"
+        },
+        {
+          "source": 1097295,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Server-Side Request Forgery in Server Actions",
+          "url": "https://github.com/advisories/GHSA-fr5h-rqp8-mj6g",
+          "severity": "high",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=13.4.0 <14.1.1"
+        },
+        {
+          "source": 1098118,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Vulnerable to HTTP Request Smuggling",
+          "url": "https://github.com/advisories/GHSA-77r5-gw3j-2mpf",
+          "severity": "high",
+          "cwe": [
+            "CWE-444"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:H/A:N"
+          },
+          "range": ">=13.4.0 <13.5.1"
+        },
+        {
+          "source": 1100393,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Denial of Service (DoS) condition",
+          "url": "https://github.com/advisories/GHSA-fq54-2j52-jc42",
+          "severity": "high",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=13.3.1 <13.5.0"
+        },
+        {
+          "source": 1100421,
+          "name": "next",
+          "dependency": "next",
+          "title": "Denial of Service condition in Next.js image optimization",
+          "url": "https://github.com/advisories/GHSA-g77x-44xx-532m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=10.0.0 <14.2.7"
+        },
+        {
+          "source": 1101380,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js authorization bypass vulnerability",
+          "url": "https://github.com/advisories/GHSA-7gfc-8cq8-jh5f",
+          "severity": "high",
+          "cwe": [
+            "CWE-285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=9.5.5 <14.2.15"
+        },
+        {
+          "source": 1101439,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Allows a Denial of Service (DoS) with Server Actions",
+          "url": "https://github.com/advisories/GHSA-7m27-7ghc-44w9",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=13.0.0 <13.5.8"
+        },
+        {
+          "source": 1103623,
+          "name": "next",
+          "dependency": "next",
+          "title": "Authorization Bypass in Next.js Middleware",
+          "url": "https://github.com/advisories/GHSA-f82v-jwr5-mffw",
+          "severity": "critical",
+          "cwe": [
+            "CWE-285"
+          ],
+          "cvss": {
+            "score": 9.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N"
+          },
+          "range": ">=13.0.0 <13.5.9"
+        },
+        {
+          "source": 1104490,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Race Condition to Cache Poisoning",
+          "url": "https://github.com/advisories/GHSA-qpjv-v59x-3qc4",
+          "severity": "low",
+          "cwe": [
+            "CWE-362"
+          ],
+          "cvss": {
+            "score": 3.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+          },
+          "range": "<14.2.24"
+        },
+        "postcss",
+        "zod"
+      ],
+      "effects": [],
+      "range": "<=14.2.23",
+      "nodes": [
+        "node_modules/next"
+      ],
+      "fixAvailable": {
+        "name": "next",
+        "version": "13.5.11",
+        "isSemVerMajor": false
+      }
+    },
+    "next-auth": {
+      "name": "next-auth",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1094922,
+          "name": "next-auth",
+          "dependency": "next-auth",
+          "title": "Possible user mocking that bypasses basic authentication",
+          "url": "https://github.com/advisories/GHSA-v64w-49xw-qq89",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-285"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N"
+          },
+          "range": "<4.24.5"
+        },
+        "cookie"
+      ],
+      "effects": [],
+      "range": "<=4.24.8",
+      "nodes": [
+        "node_modules/next-auth"
+      ],
+      "fixAvailable": true
+    },
+    "path-to-regexp": {
+      "name": "path-to-regexp",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1101844,
+          "name": "path-to-regexp",
+          "dependency": "path-to-regexp",
+          "title": "Unpatched `path-to-regexp` ReDoS in 0.1.x",
+          "url": "https://github.com/advisories/GHSA-rhx6-c78j-4q9w",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<0.1.12"
+        },
+        {
+          "source": 1101850,
+          "name": "path-to-regexp",
+          "dependency": "path-to-regexp",
+          "title": "path-to-regexp outputs backtracking regular expressions",
+          "url": "https://github.com/advisories/GHSA-9wv6-86v2-598j",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<0.1.10"
+        }
+      ],
+      "effects": [
+        "express"
+      ],
+      "range": "<=0.1.11",
+      "nodes": [
+        "node_modules/path-to-regexp"
+      ],
+      "fixAvailable": true
+    },
+    "postcss": {
+      "name": "postcss",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1094544,
+          "name": "postcss",
+          "dependency": "postcss",
+          "title": "PostCSS line return parsing error",
+          "url": "https://github.com/advisories/GHSA-7fh5-64p2-3v2j",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-74",
+            "CWE-144"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<8.4.31"
+        }
+      ],
+      "effects": [
+        "next"
+      ],
+      "range": "<8.4.31",
+      "nodes": [
+        "node_modules/postcss"
+      ],
+      "fixAvailable": {
+        "name": "next",
+        "version": "13.5.11",
+        "isSemVerMajor": false
+      }
+    },
+    "semver": {
+      "name": "semver",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1101088,
+          "name": "semver",
+          "dependency": "semver",
+          "title": "semver vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-c2qf-rxjj-qqgw",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.5.2"
+        },
+        {
+          "source": 1101090,
+          "name": "semver",
+          "dependency": "semver",
+          "title": "semver vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-c2qf-rxjj-qqgw",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=6.0.0 <6.3.1"
+        }
+      ],
+      "effects": [],
+      "range": "6.0.0 - 6.3.0 || 7.0.0 - 7.5.1",
+      "nodes": [
+        "node_modules/eslint-plugin-import/node_modules/semver",
+        "node_modules/eslint-plugin-jsx-a11y/node_modules/semver",
+        "node_modules/eslint-plugin-react/node_modules/semver",
+        "node_modules/make-dir/node_modules/semver",
+        "node_modules/semver"
+      ],
+      "fixAvailable": true
+    },
+    "send": {
+      "name": "send",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1100526,
+          "name": "send",
+          "dependency": "send",
+          "title": "send vulnerable to template injection that can lead to XSS",
+          "url": "https://github.com/advisories/GHSA-m6fv-jmcg-4jfg",
+          "severity": "low",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:L"
+          },
+          "range": "<0.19.0"
+        }
+      ],
+      "effects": [
+        "express",
+        "serve-static"
+      ],
+      "range": "<0.19.0",
+      "nodes": [
+        "node_modules/send"
+      ],
+      "fixAvailable": true
+    },
+    "serve-static": {
+      "name": "serve-static",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1100528,
+          "name": "serve-static",
+          "dependency": "serve-static",
+          "title": "serve-static vulnerable to template injection that can lead to XSS",
+          "url": "https://github.com/advisories/GHSA-cm22-4g7w-348p",
+          "severity": "low",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:L"
+          },
+          "range": "<1.16.0"
+        },
+        "send"
+      ],
+      "effects": [
+        "express"
+      ],
+      "range": "<=1.16.0",
+      "nodes": [
+        "node_modules/serve-static"
+      ],
+      "fixAvailable": true
+    },
+    "tar": {
+      "name": "tar",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1097493,
+          "name": "tar",
+          "dependency": "tar",
+          "title": "Denial of service while parsing a tar file due to lack of folders count validation",
+          "url": "https://github.com/advisories/GHSA-f5x3-32g6-xq36",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H"
+          },
+          "range": "<6.2.1"
+        }
+      ],
+      "effects": [],
+      "range": "<6.2.1",
+      "nodes": [
+        "node_modules/tar"
+      ],
+      "fixAvailable": true
+    },
+    "word-wrap": {
+      "name": "word-wrap",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102444,
+          "name": "word-wrap",
+          "dependency": "word-wrap",
+          "title": "word-wrap vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-j8xg-fqg3-53r7",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<1.2.4"
+        }
+      ],
+      "effects": [],
+      "range": "<1.2.4",
+      "nodes": [
+        "node_modules/word-wrap"
+      ],
+      "fixAvailable": true
+    },
+    "zod": {
+      "name": "zod",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1099462,
+          "name": "zod",
+          "dependency": "zod",
+          "title": "Zod denial of service vulnerability",
+          "url": "https://github.com/advisories/GHSA-m95q-7qp3-xv42",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<=3.22.2"
+        }
+      ],
+      "effects": [
+        "next"
+      ],
+      "range": "<=3.22.2",
+      "nodes": [
+        "node_modules/zod"
+      ],
+      "fixAvailable": {
+        "name": "next",
+        "version": "13.5.11",
+        "isSemVerMajor": false
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 4,
+      "moderate": 9,
+      "high": 6,
+      "critical": 2,
+      "total": 21
+    },
+    "dependencies": {
+      "prod": 436,
+      "dev": 0,
+      "optional": 9,
+      "peer": 2,
+      "peerOptional": 0,
+      "total": 446
+    }
+  }
+}
