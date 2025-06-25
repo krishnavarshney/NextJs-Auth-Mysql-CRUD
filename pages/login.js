@@ -111,6 +111,11 @@ const Login = () => {
                 </button>
                   <Link className="btn btn-danger p-2 fs-5 w-50" href="/signup">Sign Up</Link>
               </div>
+              <div className="text-center mt-3">
+                <Link href="/forgot-password" legacyBehavior>
+                  <a className="text-white-50 text-decoration-none">Forgot Password?</a>
+                </Link>
+              </div>
             </form>
           </div>
         </div>
