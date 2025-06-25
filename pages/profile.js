@@ -1,264 +1,241 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import Head from 'next/head';
+import Navbar from '../components/Navbar'; // Use the shared Navbar
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [users, setUsers] = useState(null);
-  const [user, setUser] = useState({ name: "", email: "" });
-  const [cust, setCust] = useState({ name: "", email: "" }); //used for preventing null values on name and email
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // For profile picture update
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [profileMessage, setProfileMessage] = useState('');
+  const [profileError, setProfileError] = useState('');
+  const [isUpdatingPicture, setIsUpdatingPicture] = useState(false);
+
+  // For email change
+  const [newEmail, setNewEmail] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isRequestingEmailChange, setIsRequestingEmailChange] = useState(false);
 
   useEffect(() => {
-    const checkAuthentication = async () => {
+    const fetchCurrentUser = async () => {
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          // Redirect to the login page if token is not found
-          router.push("/login");
+        const res = await fetch("/api/auth/check-auth", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+          setProfilePictureUrl(data.user.profilePictureUrl || ''); // Initialize with current URL
         } else {
-          const response = await fetch("/api/auth/check-auth", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const data = await response.json();
-
-          if (!response.ok) {
-            // Redirect to the login page if the token is invalid
-            router.push("/login");
-          } else {
-            // Set the user data
-            setUser(data.user);
-          }
+          localStorage.removeItem("token");
+          router.push("/login");
         }
       } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    checkAuthentication();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("/api/auth/users");
-        const data = await response.json();
-        setUsers(data.users);
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-      });
-
-      if (response.ok) {
-        // Clear token and redirect to the login page
+        console.error("Failed to fetch user data", error);
         localStorage.removeItem("token");
         router.push("/login");
-      } else {
-        console.error("Logout failed");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
+    };
+    fetchCurrentUser();
+  }, [router]);
+
+  const handleProfilePictureUpdate = async (e) => {
+    e.preventDefault();
+    setProfileMessage('');
+    setProfileError('');
+    setIsUpdatingPicture(true);
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch('/api/user/upload-profile-picture', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ imageUrl: profilePictureUrl }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setProfileMessage(data.message);
+        // Update user state locally if needed, or rely on next check-auth call
+        setUser(prevUser => ({ ...prevUser, profilePictureUrl: data.imageUrl }));
+      } else {
+        setProfileError(data.message || 'Failed to update profile picture.');
+      }
+    } catch (err) {
+      console.error(err);
+      setProfileError('An unexpected error occurred.');
+    } finally {
+      setIsUpdatingPicture(false);
     }
   };
 
-  const handleProfileUpdate = async () => {
+  const handleRequestEmailChange = async (e) => {
+    e.preventDefault();
+    setEmailMessage('');
+    setEmailError('');
+    setIsRequestingEmailChange(true);
+    const token = localStorage.getItem("token");
+
     try {
-        const response = await fetch("/api/auth/update-profile", {
-            method: "POST",
-            headers: { "Content-Type": "application/json",},body: JSON.stringify({
-                    name: "John Doe",
-                    email: "tugrp@example.com",
-                    password: "password",
-                    })
-                    });
+      const res = await fetch('/api/user/request-email-change', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newEmail }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEmailMessage(data.message);
+        setNewEmail(''); // Clear input field
+      } else {
+        setEmailError(data.message || 'Failed to request email change.');
+      }
+    } catch (err) {
+      console.error(err);
+      setEmailError('An unexpected error occurred.');
+    } finally {
+      setIsRequestingEmailChange(false);
     }
-    catch (error) {
-        console.error("An error occurred:", error);
-        }
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mt-5 text-center">
+          <p>Loading profile...</p>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </>
+    );
   }
 
-  const handleEdit = (userId) => {
-    const { id } = userId;
-    router.push(`/edit-user/${id}`);
-  };
-  
-
-  const handleDelete = async (userId) => {
-    try {
-      const response = await fetch(`/api/auth/${userId}`, {
-        method: 'DELETE',
-      });
-      const delUser = await response.json();
-      if (response.ok) {
-        console.log("User Deleted")
-        router.reload();
-        // User deleted successfully, you can perform any necessary actions (e.g., refetch user list)
-      } else {
-        console.error('Delete failed');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-  };
-  
+  if (!user) {
+    // Should have been redirected by useEffect, but as a fallback
+    return (
+        <>
+            <Navbar />
+            <div className="container mt-5"><p>User not found. Please log in.</p></div>
+        </>
+    );
+  }
 
   return (
-    <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div className="container">
-          <Link href="/dashboard">
-            <div className="navbar-brand">Home</div>
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div
-            className="collapse navbar-collapse justify-content-end"
-            id="navbarNavDropdown"
-          >
-            <ul className="navbar-nav">
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="profileDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    fill="currentColor"
-                    className="bi bi-person-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                  </svg>
-                </a>
-                <ul
-                  className="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="profileDropdown"
-                >
-                  <li>
-                    <a
-                      className="dropdown-item btn"
-                      href="#"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+    <>
+      <Head>
+        <title>My Profile - {user.name}</title>
+      </Head>
+      <Navbar />
       <div className="container mt-5">
-  <h2 className="mb-3">View Users</h2>
-  {users ? (
-    <div className="table-responsive">
-    <table className="table table-dark table-hover">
-        <caption>List of users</caption>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((users) => (
-          <tr key={users.id}>
-            <td>{users.id}</td>
-            <td>{users.name}</td>
-            <td>{users.email}</td>
-            <td>
-                <a className="btn link-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" onClick={() => handleEdit(users)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                    </svg>
-                </a>
-            </td>
-            <td>
-                <a className="btn link-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Delete" onClick={() => handleDelete(users.id)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
-                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
-                    </svg>
-                </a>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    </div>
-  ) : (
-    <p>Loading users...</p>
-  )}
-</div>
-<div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog text-black">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="staticBackdropLabel">
-                Delete User
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
+        <h1 className="mb-4">My Profile</h1>
+
+        <div className="row">
+          {/* Profile Picture Section */}
+          <div className="col-md-6 mb-4">
+            <div className="card shadow">
+              <div className="card-body">
+                <h2 className="card-title h5">Profile Picture</h2>
+                <div className="mb-3 text-center">
+                  {user.profilePictureUrl ? (
+                    <img
+                      src={user.profilePictureUrl}
+                      alt="Profile"
+                      className="img-thumbnail rounded-circle"
+                      style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div
+                      className="bg-secondary rounded-circle d-flex align-items-center justify-content-center"
+                      style={{ width: '150px', height: '150px', color: 'white', fontSize: '50px' }}
+                    >
+                      {user.name ? user.name.charAt(0).toUpperCase() : '?'}
+                    </div>
+                  )}
+                </div>
+                {profileMessage && <div className="alert alert-success">{profileMessage}</div>}
+                {profileError && <div className="alert alert-danger">{profileError}</div>}
+                <form onSubmit={handleProfilePictureUpdate}>
+                  <div className="mb-3">
+                    <label htmlFor="profilePictureUrlInput" className="form-label">New Profile Picture URL</label>
+                    <input
+                      type="url"
+                      className="form-control"
+                      id="profilePictureUrlInput"
+                      value={profilePictureUrl}
+                      onChange={(e) => setProfilePictureUrl(e.target.value)}
+                      placeholder="https://example.com/image.png"
+                      disabled={isUpdatingPicture}
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={isUpdatingPicture}>
+                    {isUpdatingPicture ? 'Updating...' : 'Update Picture'}
+                  </button>
+                </form>
+              </div>
             </div>
-            <div className="modal-body">Are You Sure to want to Delete user ?</div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-dark"
-                data-bs-dismiss="modal"
-              >
-                No
-              </button>
-              <button type="button" className="btn btn-primary">
-                Yes
-              </button>
+          </div>
+
+          {/* Email Management Section */}
+          <div className="col-md-6 mb-4">
+            <div className="card shadow">
+              <div className="card-body">
+                <h2 className="card-title h5">Manage Email</h2>
+                <p><strong>Current Email:</strong> {user.email}</p>
+                {emailMessage && <div className="alert alert-success">{emailMessage}</div>}
+                {emailError && <div className="alert alert-danger">{emailError}</div>}
+                <form onSubmit={handleRequestEmailChange}>
+                  <div className="mb-3">
+                    <label htmlFor="newEmailInput" className="form-label">New Email Address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="newEmailInput"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      placeholder="Enter your new email"
+                      disabled={isRequestingEmailChange}
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={isRequestingEmailChange}>
+                    {isRequestingEmailChange ? 'Sending...' : 'Request Email Change'}
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Other profile information can be displayed here */}
+        <div className="card shadow mb-4">
+            <div className="card-body">
+                <h2 className="card-title h5">Account Details</h2>
+                <p><strong>Name:</strong> {user.name}</p>
+                <p><strong>User ID:</strong> {user.id}</p>
+                <p><strong>Role:</strong> {user.role}</p>
+                {/* Add link to change password page if it exists */}
+            </div>
+        </div>
+
       </div>
-    </div>
+    </>
   );
 }

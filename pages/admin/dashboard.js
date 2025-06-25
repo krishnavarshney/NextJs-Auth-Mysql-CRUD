@@ -20,6 +20,15 @@ export default function AdminDashboard() {
   const [currentUser, setCurrentUser] = useState(null); // To store logged-in user info
   const router = useRouter();
 
+  // State for Edit User Modal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null); // User object being edited
+  const [editFormData, setEditFormData] = useState({ name: '', email: '', role: '', password: '' });
+  const [editError, setEditError] = useState('');
+  const [editMessage, setEditMessage] = useState('');
+  const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+
+
   useEffect(() => {
     // Fetch current user data (including role) to protect the page
     // This relies on an auth check endpoint that returns user role
@@ -85,6 +94,85 @@ export default function AdminDashboard() {
       }
     }
   };
+
+  const handleOpenEditModal = (userToEdit) => {
+    setEditingUser(userToEdit);
+    setEditFormData({
+      name: userToEdit.name,
+      email: userToEdit.email,
+      role: userToEdit.role,
+      password: '' // Clear password field each time
+    });
+    setEditError('');
+    setEditMessage('');
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditingUser(null);
+    setEditFormData({ name: '', email: '', role: '', password: '' });
+    setEditError('');
+    setEditMessage('');
+  };
+
+  const handleEditFormChange = (e) => {
+    setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    setEditError('');
+    setEditMessage('');
+    setIsSubmittingEdit(true);
+
+    // Construct payload, only include fields that have values
+    const payload = {};
+    if (editFormData.name && editFormData.name !== editingUser.name) payload.name = editFormData.name;
+    if (editFormData.email && editFormData.email !== editingUser.email) payload.email = editFormData.email;
+    if (editFormData.role && editFormData.role !== editingUser.role) payload.role = editFormData.role;
+    if (editFormData.password) payload.password = editFormData.password;
+
+    if (Object.keys(payload).length === 0) {
+      setEditMessage("No changes detected.");
+      setIsSubmittingEdit(false);
+      // Optionally close modal after a delay or keep it open
+      // setTimeout(handleCloseEditModal, 2000);
+      return;
+    }
+
+    // Prevent admin from changing their own role if they are the current user
+    if (currentUser && currentUser.id === editingUser.id && payload.role && payload.role !== 'admin') {
+        setEditError("You cannot change your own role from admin.");
+        setIsSubmittingEdit(false);
+        return;
+    }
+
+
+    try {
+      const res = await fetchWithAuth(`/api/admin/users/${editingUser.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEditMessage(data.message || 'User updated successfully!');
+        // Refresh users list to show changes
+        fetchUsers();
+        setTimeout(handleCloseEditModal, 1500); // Close modal after a short delay on success
+      } else {
+        setEditError(data.message || 'Failed to update user.');
+      }
+    } catch (err) {
+      console.error('Failed to update user:', err);
+      setEditError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setIsSubmittingEdit(false);
+    }
+  };
+
 
   if (!currentUser && isLoading) { // Still checking auth or loading initial data
     return (
@@ -159,6 +247,13 @@ export default function AdminDashboard() {
                   <td>{user.role}</td>
                   <td>
                     <button
+                      className="btn btn-primary btn-sm me-2"
+                      onClick={() => handleOpenEditModal(user)}
+                      disabled={currentUser && currentUser.id === user.id && user.role === 'admin'} // Prevent self-edit of role if admin
+                    >
+                      Edit
+                    </button>
+                    <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDeleteUser(user.id)}
                       disabled={currentUser && currentUser.id === user.id} // Prevent admin from deleting self
@@ -170,6 +265,55 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        )}
+
+        {/* Edit User Modal (Bootstrap) */}
+        {showEditModal && editingUser && (
+          <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <form onSubmit={handleUpdateUser}>
+                  <div className="modal-header">
+                    <h5 className="modal-title">Edit User: {editingUser.name}</h5>
+                    <button type="button" className="btn-close" onClick={handleCloseEditModal} disabled={isSubmittingEdit}></button>
+                  </div>
+                  <div className="modal-body">
+                    {editError && <div className="alert alert-danger">{editError}</div>}
+                    {editMessage && <div className="alert alert-success">{editMessage}</div>}
+
+                    <div className="mb-3">
+                      <label htmlFor="editName" className="form-label">Name</label>
+                      <input type="text" className="form-control" id="editName" name="name" value={editFormData.name} onChange={handleEditFormChange} disabled={isSubmittingEdit} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="editEmail" className="form-label">Email</label>
+                      <input type="email" className="form-control" id="editEmail" name="email" value={editFormData.email} onChange={handleEditFormChange} disabled={isSubmittingEdit} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="editRole" className="form-label">Role</label>
+                      <select className="form-select" id="editRole" name="role" value={editFormData.role} onChange={handleEditFormChange}
+                        disabled={isSubmittingEdit || (currentUser && currentUser.id === editingUser.id)}
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                       {currentUser && currentUser.id === editingUser.id && <small className="form-text text-muted">You cannot change your own role.</small>}
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="editPassword" className="form-label">New Password (optional)</label>
+                      <input type="password" className="form-control" id="editPassword" name="password" value={editFormData.password} onChange={handleEditFormChange} placeholder="Leave blank to keep current password" disabled={isSubmittingEdit} />
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={handleCloseEditModal} disabled={isSubmittingEdit}>Close</button>
+                    <button type="submit" className="btn btn-primary" disabled={isSubmittingEdit}>
+                      {isSubmittingEdit ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </>
