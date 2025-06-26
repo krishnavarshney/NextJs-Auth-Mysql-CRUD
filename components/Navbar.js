@@ -1,94 +1,22 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: session, status } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      setIsLoading(true);
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const res = await fetch("/api/auth/check-auth", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setUser(data.user);
-          } else {
-            // Token might be invalid or expired
-            localStorage.removeItem("token");
-            setUser(null);
-          }
-        } catch (error) {
-          console.error("Failed to fetch user", error);
-          localStorage.removeItem("token"); // Clear token on error
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-      setIsLoading(false);
-    };
-
-    fetchUser();
-
-    // Listen to storage events to sync logout across tabs
-    const handleStorageChange = (event) => {
-      if (event.key === 'token' && event.newValue === null) {
-        setUser(null);
-        router.push('/login'); // Optional: redirect to login on logout from another tab
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-
-    // Re-check auth when route changes, if needed, or rely on page-level checks
-    // For simplicity, this Navbar primarily relies on initial load and storage events.
-    // More complex scenarios might use a global auth context.
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-
-  }, [router]); // Added router to dependency array if it's used for reactive changes based on route
+  const isLoading = status === "loading";
 
   const handleLogout = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.ok) {
-        localStorage.removeItem("token");
-        setUser(null);
-        router.push("/login");
-      } else {
-        console.error("Logout failed:", await res.json());
-         // Still attempt to clear client-side session
-        localStorage.removeItem("token");
-        setUser(null);
-        router.push("/login"); // Force redirect even if server logout fails
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-      localStorage.removeItem("token");
-      setUser(null);
-      router.push("/login"); // Force redirect
-    }
+    // If using custom JWT alongside NextAuth, clear that too.
+    localStorage.removeItem("token"); // Clear custom JWT if it exists
+
+    // Sign out from NextAuth. It will redirect to the login page or homepage by default.
+    // Specify callbackUrl if you want a different redirect.
+    await signOut({ callbackUrl: '/login' });
   };
 
-  // Don't render navbar content until loading is finished to prevent flash of incorrect links
-  // or render a minimal loading state for Navbar itself if preferred.
-  // For now, we let it render and links will adjust once `isLoading` is false.
+  const user = session?.user; // User object from NextAuth session
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -112,6 +40,7 @@ export default function Navbar() {
             <li className="nav-item">
               <Link href="/" legacyBehavior><a className="nav-link">Home</a></Link>
             </li>
+            {/* Show links based on NextAuth session status */}
             {!isLoading && user && (
               <>
                 <li className="nav-item">
@@ -120,6 +49,7 @@ export default function Navbar() {
                 <li className="nav-item">
                   <Link href="/profile" legacyBehavior><a className="nav-link">Profile</a></Link>
                 </li>
+                {/* Role is now on session.user.role from NextAuth token */}
                 {user.role === 'admin' && (
                   <li className="nav-item">
                     <Link href="/admin/dashboard" legacyBehavior><a className="nav-link">Admin Panel</a></Link>
@@ -134,11 +64,33 @@ export default function Navbar() {
                 <span className="nav-link">Loading...</span>
               </li>
             ) : user ? (
-              <li className="nav-item">
-                <button onClick={handleLogout} className="btn btn-link nav-link">
-                  Logout ({user.name})
-                </button>
-              </li>
+              <>
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {user.image ? (
+                      <img src={user.image} alt={user.name || 'User'} style={{width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px'}} />
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-person-circle me-1" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                      </svg>
+                    )}
+                    {user.name || user.email}
+                  </a>
+                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    <li><Link href="/profile" legacyBehavior><a className="dropdown-item">Profile</a></Link></li>
+                    {user.role === 'admin' && (
+                        <li><Link href="/admin/dashboard" legacyBehavior><a className="dropdown-item">Admin Panel</a></Link></li>
+                    )}
+                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                        <button onClick={handleLogout} className="dropdown-item btn btn-link">
+                            Logout
+                        </button>
+                    </li>
+                  </ul>
+                </li>
+              </>
             ) : (
               <>
                 <li className="nav-item">
